@@ -1,0 +1,40 @@
+---
+title: "Counts Visuals"
+author: "Maura Kautz"
+date: "2024-10-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(readr)
+library(tidyverse)
+library(knitr)
+library(grDevices)
+```
+
+```{r, echo=FALSE, message=FALSE}
+aml_counts <- read_tsv("/Users/maurakautz/pAML/counts (1).tsv")
+```
+
+```{r, fig.width=10, echo=FALSE, message=FALSE`}
+aml_plot <- ggplot(aml_counts, aes(x=Variant_Type, y=log2(Count), fill=Caller_Type)) +
+  geom_bar(position=position_dodge(), stat="identity") +
+  theme_bw() +
+  xlab("Structural Variant Type") +
+  ylab("Count") +
+  facet_wrap(~Chromosome) +
+  ggtitle("Frequency of Structural Variants by Caller Across Chromosomes - Test Data") +
+  scale_fill_manual(values = c("#047031",
+                               "#8bba40",
+                               "#fee11d"))
+aml_plot$labels$fill <- "Caller"
+
+aml_plot
+
+ggsave("test_file_visual.png")
+  
+  
+```
+
