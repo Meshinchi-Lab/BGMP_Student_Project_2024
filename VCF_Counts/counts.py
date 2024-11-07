@@ -36,25 +36,26 @@ counter_dict = dict()
 for patient in patient_list:
     for caller in caller_list: 
         with open(f"{f}/{patient}.{caller}.vcf", "r") as file: 
+            
             while True: 
                 line = file.readline().strip().split("\t")
 
                 if line == ['']:
                     break 
-                
+
                 if line[0].startswith("##") != True:
                     chromosome = line[0]
 
                     #count the number of svs for each chromosome & add to dictionary
                     for sv in svlist: 
                         if line[7].startswith(f"SVTYPE={sv}") or line[7].startswith(f"PRECISE;SVTYPE={sv}") or line[7].startswith(f"IMPRECISE;SVTYPE={sv}"):
-                            if (caller, chromosome, sv) in counter_dict:
-                                counter_dict[(caller, chromosome, sv)] += 1
+                            if (patient, caller, chromosome, sv) in counter_dict:
+                                counter_dict[(patient, caller, chromosome, sv)] += 1
                             else: 
-                                counter_dict[(caller, chromosome, sv)] = 1 
+                                counter_dict[(patient, caller, chromosome, sv)] = 1 
 
-#write to output file for graphing
+#write to output file for ALL patients 
 with open("counts.tsv", "w") as counts: 
-    counts.write("Caller\tChromosome\tSV\tCount\n")
+    counts.write(f"PatientID\tCaller\tChromosome\tSV\tCount\n")
     for key in counter_dict: 
-        counts.write(f'{key[0]}\t{key[1]}\t{key[2]}\t{counter_dict[key]}\n')
+        counts.write(f'{key[0]}\t{key[1]}\t{key[2]}\t{key[3]}\t{counter_dict[key]}\n')
