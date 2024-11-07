@@ -6,7 +6,6 @@ import itertools
 
 # ./llcombo2.py -f /projects/bgmp/shared/groups/2024/aml/lenara/trial_files
   
-  
 #Functions
 def overlaps(span1, span2):
     return span1[0] <= span2[1] and span2[0] <= span1[1]
@@ -20,20 +19,20 @@ def build_infodict(infocol):
         #this is items in info like "IMPRECISE" (which have no value) will not get added to the dictionary
         if len(term) > 1:
             infodict[term[0]] = term[1]
-
     return infodict
-
-
 
 def get_args():
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("-f", help="Location of folder containing input files", required=True, type=str)
+    parser.add_argument("-input", help="Location of folder containing input files", required=True, type=str)
+    parser.add_argument("-output", help="Location of folder where the output file will go", required=True, type=str)
     return parser.parse_args() 
 
 args = get_args()
-f = args.f
+input = args.input
+output = args.output
+
 #get all file names from folder and save as list
-dir_list = os.listdir(f)
+dir_list = os.listdir(input)
 
 #initalize
 patient_list = []
@@ -49,10 +48,8 @@ for file in dir_list:
 
 #initalize
 svlist = ("INS", "DEL", "DUP", "BND", "INV")
-chrom_list = ("chr1", "chr2", "chr24")
+chrom_list = ("chr1", "chr2")
 chr_sv_combos =  list(itertools.product(svlist, chrom_list))
-
-
 
 #open all files by patient ID 
 for patient in patient_list:
@@ -60,7 +57,7 @@ for patient in patient_list:
     for caller in caller_list:
         dictionary[caller] = {}
     #POPULATING DICTIONARY -----------------------------------------------------------------------------------------------------
-    with open(f"{f}/{patient}.{caller_list[0]}.vcf", "r") as file1, open(f"{f}/{patient}.{caller_list[1]}.vcf", "r") as file2, open(f"{f}/{patient}.{caller_list[2]}.vcf", "r") as file3, open(f"{patient}.consensus.vcf", "w") as fo:
+    with open(f"{input}/{patient}.{caller_list[0]}.vcf", "r") as file1, open(f"{input}/{patient}.{caller_list[1]}.vcf", "r") as file2, open(f"{input}/{patient}.{caller_list[2]}.vcf", "r") as file3, open(f"{output}/{patient}.consensus.vcf", "w") as fo:
         while True:
             line1 = file1.readline()
             line_as_list1 = line1.strip().split("\t")
@@ -75,7 +72,6 @@ for patient in patient_list:
             
             elif line_as_list1[0].startswith("#") != True:
                 line_as_list1[2] = caller_list[0]
-                line1 = "\t".join(line_as_list1)
                 #get start position
                 start_pos = int(line_as_list1[1])
                 #get chr
@@ -121,7 +117,7 @@ for patient in patient_list:
             
             elif line_as_list2[0].startswith("#") != True:
                 line_as_list2[2] = caller_list[1]
-                line2 = "\t".join(line_as_list2)
+
                 #get start position
                 start_pos = int(line_as_list2[1])
                 #get chr
@@ -169,7 +165,7 @@ for patient in patient_list:
             
             elif line_as_list3[0].startswith("#") != True:
                 line_as_list3[2] = caller_list[2]
-                line3 = "\t".join(line_as_list3)
+
                 #get start position
                 start_pos = int(line_as_list3[1])
                 #get chr
