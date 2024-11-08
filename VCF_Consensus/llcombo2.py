@@ -69,7 +69,7 @@ for patient in patient_list:
             #caller 1-----------------------------------------------------------------------------------------------------------
             if line_as_list1 == ['']:
                 break
-            
+
             elif line_as_list1[0].startswith("#") != True:
                 line_as_list1[2] = caller_list[0]
                 #get start position
