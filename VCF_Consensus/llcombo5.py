@@ -36,7 +36,6 @@ def BND_parser(line_as_list, infodictionary):
     #BND_dict = {BND_func_tuple : full line}
     #Tuple of CHROM, POS, MCHROM, MPOS, BND_type
 
-
     BND_func_tuple: tuple = ()
 
     bnd_mate_pos = re.search(r"(?<=:)\d+", line_as_list[4])
@@ -51,8 +50,6 @@ def BND_parser(line_as_list, infodictionary):
         allelic_depth = sample_stats.split(":")[1]
         allelic_depth = int(allelic_depth.split(",")[1])
 
-
-
     #print(bnd_mate_pos.group())
 
     if re.findall(r"[A,T,G,C,N]+\[", line_as_list[4]):
@@ -62,25 +59,25 @@ def BND_parser(line_as_list, infodictionary):
         BND_func_tuple = (line_as_list[0], "BND", 1, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
         #print(f"A mate right forward BND call t[p[  {BND_func_tuple}")
 
-    if re.findall(r"\]+[A,T,G,C,N]", line_as_list[4]):
+    elif re.findall(r"\]+[A,T,G,C,N]", line_as_list[4]):
         # Sample string: ]chr20:29368734]C
         # Match: ]C
         #MLF
         BND_func_tuple = (line_as_list[0], "BND", 2, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
         #print(f"A mate left forward BND call ]p]t")
 
-    if re.findall(r"[A,T,G,C,N]+\]", line_as_list[4]):
+    elif re.findall(r"[A,T,G,C,N]+\]", line_as_list[4]):
         # Sample string: G]chr20:29368734]
         # Match: G]
         #MRR
-        ND_func_tuple = (line_as_list[0], "BND", 3, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
+        BND_func_tuple = (line_as_list[0], "BND", 3, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
         #print(f"A mate right reversed BND call t]p]")
 
-    if re.findall(r"\[+[A,T,G,C,N]", line_as_list[4]):
+    elif re.findall(r"\[+[A,T,G,C,N]", line_as_list[4]):
         # Sample string: [chr20:29368734[C
         # Match: [C
         #MLR
-        ND_func_tuple = (line_as_list[0], "BND", 4, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
+        BND_func_tuple = (line_as_list[0], "BND", 4, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
         #print(f"A mate left reversed BND call [p[t")
 
     # BND_func_tuple = (CHROM, SV, BND_type, AD, Mate_CHROM, Mate_POS)
