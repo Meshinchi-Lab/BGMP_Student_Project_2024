@@ -50,8 +50,6 @@ def BND_parser(line_as_list, infodictionary):
         allelic_depth = sample_stats.split(":")[1]
         allelic_depth = int(allelic_depth.split(",")[1])
 
-    #print(bnd_mate_pos.group())
-
     if re.findall(r"[A,T,G,C,N]+\[", line_as_list[4]):
         # Sample string: G[chr20:29368734[
         # Match: G[
@@ -79,9 +77,9 @@ def BND_parser(line_as_list, infodictionary):
         #MLR
         BND_func_tuple = (line_as_list[0], "BND", 4, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
         #print(f"A mate left reversed BND call [p[t")
-
-    # BND_func_tuple = (CHROM, SV, BND_type, AD, Mate_CHROM, Mate_POS)
     return BND_func_tuple
+    # BND_func_tuple = (CHROM, SV, BND_type, AD, Mate_CHROM, Mate_POS)
+    
 
 def populate_bigdict(patientid, callerlist, foldername):
     bigdict = {}
@@ -111,10 +109,12 @@ def populate_bigdict(patientid, callerlist, foldername):
                     svtype = infodictionary['SVTYPE']
 
                     #temporary diversion for breakends
-                    if svtype == "BND":
+                    if svtype == "BND": 
+                        mchr = re.search(r"\w+(?=:)", line_as_list[4])
+                        if mchr.group() in chrom_list and line_as_list[0] in chrom_list:
                         #this is where abraham's breakend algorithm will go :)
-                        BND_tuple = BND_parser(line_as_list, infodictionary)
-                        bigdict[caller][BND_tuple] = line
+                            BND_tuple = BND_parser(line_as_list, infodictionary)
+                            bigdict[caller][BND_tuple] = line
 
                     else:
                         #get SV length
@@ -147,15 +147,15 @@ def populate_bigdict(patientid, callerlist, foldername):
 
 def get_args():
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument("-i", help="Location of folder containing input files", required=True, type=str)
-    parser.add_argument("-o", help="Location of folder to place output files", required=True, type=str)
+    parser.add_argument("-input", help="Location of folder containing input files", required=True, type=str)
+    parser.add_argument("-output", help="Location of folder to place output files", required=True, type=str)
     return parser.parse_args() 
 
 args = get_args()
-i = args.i
-o = args.o
+input = args.input
+output = args.output
 #get all file names from folder and save as list
-dir_list = os.listdir(i)
+dir_list = os.listdir(input)
 
 #initalize
 patient_list = []
@@ -176,11 +176,11 @@ chr_sv_combos =  list(itertools.product(chrom_list, svlist))
 
 #open all files by patient ID 
 for patient in patient_list:
-    with open(f"{o}/testconsensus_no_filter_deduped.vcf", "w") as fo:
+    with open(f"{output}/testconsensus_no_filter_deduped.vcf", "w") as fo:
         
         #populate dictionary where keys = caller, 
         #values = {(chrom, svtype, (start_pos, start_pos+svlen), allelic_depth): line}
-        dictionary = populate_bigdict(patient, caller_list, i)
+        dictionary = populate_bigdict(patient, caller_list, input)
 
         #Filtering and comparison --- a lot of this can be turned into a function
         #Right now, this will only handle 3 callers - going to try to fix this over the weekend
@@ -229,9 +229,7 @@ for patient in patient_list:
                 if highestAD not in highestlist:
                     highestlist.append(highestAD)
 
-
             for highestAD in highestlist:
-                print(f"{entry}\t{highestAD[0][2]}\t{highestAD[1]}")
                 line = dictionary[highestAD[1]][highestAD[0]]
                 fo.write(f"{line}\n")
             
