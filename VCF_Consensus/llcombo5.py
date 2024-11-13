@@ -30,11 +30,11 @@ def BND_parser(line_as_list, infodictionary):
     BND_type: int = 0 #Refers to BND type.
     #BND_type = 1: N[
     #BND_type = 2: ]N
-    #BND_type = 3: G]
-    #BND_type = 4: [C
+    #BND_type = 3: N]
+    #BND_type = 4: [N
 
     #BND_dict = {BND_func_tuple : full line}
-    #Tuple of CHROM, POS, MCHROM, MPOS, BND_type
+    #Tuple of (CHROM, SV, BND_type, AD, Mate_CHROM, Mate_POS)
 
     BND_func_tuple: tuple = ()
 
@@ -121,7 +121,7 @@ def populate_bigdict(patientid, callerlist, foldername):
                         svlen = infodictionary['SVLEN']
                         
                         #if there are two lengths for variants of the same type
-                        #with the same start pos
+                        #with the same start pos, keep the larger one
                         if "," in svlen:
                             svlen = svlen.split(",")
                             svlen = [abs(int(x)) for x in svlen]
@@ -182,22 +182,23 @@ for patient in patient_list:
         #values = {(chrom, svtype, (start_pos, start_pos+svlen), allelic_depth): line}
         dictionary = populate_bigdict(patient, caller_list, input)
 
-        #Filtering and comparison --- a lot of this can be turned into a function
-        #Right now, this will only handle 3 callers - going to try to fix this over the weekend
+        #FILTERING  ---------------------------------------------------------------------
         
-        #filter down to one sv chrom combo
+        #filter down to one sv-chrom combo to reduce search space
         for combo in chr_sv_combos:
             chrom = combo[0]
             sv = combo[1]
             subsetdict = {}
             for caller in caller_list:
-            #initialize two dictionaries
+                #initialize a dictionary to hold all calls on the current chromosome and of the current SV type   
                 subsetdict[caller] = {k:v for k,v in dictionary[caller].items() if k[0] == chrom and k[1] == sv}
             
             overlapdict = {}
             for caller in subsetdict:
                 for i in subsetdict[caller]:
                     overlapdict[(i, caller)] = []
+            
+            #CHECK FOR OVERLAP  ---------------------------------------------------------------------
 
             for entry in overlapdict:
                 for other in overlapdict:
@@ -216,6 +217,8 @@ for patient in patient_list:
             
             #If there are no overlaps between callers, remove that key
             overlapdict = {k:v for k,v in overlapdict.items() if v}
+
+            #COMPARE ADs AND WRITE TO FILE  ---------------------------------------------------------------------
 
             #if there are overlaps between callers, write the call with the highest AD to file
             #if it's a tie, just print the first one
