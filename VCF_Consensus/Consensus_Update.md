@@ -15,7 +15,7 @@
 | Sniffles | 4906 | 2945 | 60.02% |
 
 
-![alt text](testdata_consensus_bycaller.png)
+![alt text](VCF_Consensus/testdata_consensus_bycaller.png)
 
 
 ## Assumptions/Rules of Our Algorithm
