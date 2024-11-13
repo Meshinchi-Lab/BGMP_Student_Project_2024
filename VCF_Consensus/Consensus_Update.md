@@ -15,7 +15,7 @@
 | Sniffles | 4906 | 2945 | 60.02% |
 
 
-![alt text](VCF_Consensus/testdata_consensus_bycaller.png)
+![alt text](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/f6b72304f270a7deec6828db82d7667026e71475/VCF_Consensus/testdata_consensus_bycaller.png)
 
 
 ## Assumptions/Rules of Our Algorithm
