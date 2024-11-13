@@ -19,6 +19,7 @@
 
 
 ## Assumptions/Rules of Our Algorithm
+- Exclusively running on chromosomes 1-22
 - If two or more calls from different callers overlap, the one with the highest allelic depth (AD) is written to the output file
 - If the two or more calls from different callers overlap and have the same allelic depth, the first encountered call is written to the output file (“caller agnostic”)
 - **Handling breakends**:
