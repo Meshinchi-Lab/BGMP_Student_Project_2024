@@ -17,6 +17,10 @@
 
 ![alt text](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/f6b72304f270a7deec6828db82d7667026e71475/VCF_Consensus/testdata_consensus_bycaller.png)
 
+<img width="779"
+                                                                                                                                          alt="Screenshot 2024-11-13 at 1 54 52 PM" src="https://github.com/user-attachments/assets/8ef43368-0c27-4055-90d5-86791f8510e7">
+
+<img width="780" alt="Screenshot 2024-11-13 at 1 57 38 PM" src="https://github.com/user-attachments/assets/005dd77d-a721-4d37-bc8e-7c95f5976320">
 
 ## Assumptions/Rules of Our Algorithm
 - Exclusively running on chromosomes 1-22
@@ -29,6 +33,7 @@
     - BND_type = 3: N]
     - BND_type = 4: [N
   - Considered a match between callers if:
+
     - BNDs are of the same type and have the same mate chromosome
     - BNDs are of type 2 and 4 and mate position of the type 2 breakend is >= the mate position of the type 4 breakend
 
