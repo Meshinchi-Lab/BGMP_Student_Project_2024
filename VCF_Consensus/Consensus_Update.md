@@ -23,7 +23,7 @@
 - If two or more calls from different callers overlap, the one with the highest allelic depth (AD) is written to the output file
 - If the two or more calls from different callers overlap and have the same allelic depth, the first encountered call is written to the output file (“caller agnostic”)
 - **Handling breakends**:
-  - Established nomenclature for BND “type”:
+  - Established nomenclature for BND “type” per [VCF 4.2](https://samtools.github.io/hts-specs/VCFv4.2.pdf):
     - BND_type = 1: N[
     - BND_type = 2: ]N
     - BND_type = 3: N]
