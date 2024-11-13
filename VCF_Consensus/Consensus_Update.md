@@ -19,7 +19,6 @@
 
 
 ## Assumptions/Rules of Our Algorithm
-- If a call (1 line in VCF file) has multiple alternate alleles  with the same start position, the larger one is maintained to maximize the chance of overlap with calls from other callers. 
 - If two or more calls from different callers overlap, the one with the highest allelic depth (AD) is written to the output file
 - If the two or more calls from different callers overlap and have the same allelic depth, the first encountered call is written to the output file (“caller agnostic”)
 - **Handling breakends**:
