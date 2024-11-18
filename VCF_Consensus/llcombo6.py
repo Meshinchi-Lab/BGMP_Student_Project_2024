@@ -25,9 +25,7 @@ def build_infodict(infocol):
 
 
 def BND_parser(line_as_list, infodictionary):
-    #NOV 10 --- NEED TO IMPLEMENT THIS:
-        #If chrom is in chrom list (a real chromosome) and if mate chrom is in chrom list (a real chromosome) to remove unknown chromosomes.
-    
+   
     BND_type: int = 0 #Refers to BND type.
     #BND_type = 1: N[
     #BND_type = 2: ]N
@@ -54,33 +52,24 @@ def BND_parser(line_as_list, infodictionary):
     if re.findall(r"[A,T,G,C,N]+\[", line_as_list[4]):
         # Sample string: G[chr20:29368734[
         # Match: G[
-        #MRF
         BND_func_tuple = (line_as_list[0], "BND", 1, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
-        #print(f"A mate right forward BND call t[p[  {BND_func_tuple}")
 
     elif re.findall(r"\]+[A,T,G,C,N]", line_as_list[4]):
         # Sample string: ]chr20:29368734]C
         # Match: ]C
-        #MLF
         BND_func_tuple = (line_as_list[0], "BND", 2, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
-        #print(f"A mate left forward BND call ]p]t")
 
     elif re.findall(r"[A,T,G,C,N]+\]", line_as_list[4]):
         # Sample string: G]chr20:29368734]
         # Match: G]
-        #MRR
         BND_func_tuple = (line_as_list[0], "BND", 3, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
-        #print(f"A mate right reversed BND call t]p]")
 
     elif re.findall(r"\[+[A,T,G,C,N]", line_as_list[4]):
         # Sample string: [chr20:29368734[C
         # Match: [C
-        #MLR
         BND_func_tuple = (line_as_list[0], "BND", 4, allelic_depth, bnd_mate_chrom.group(), bnd_mate_pos.group())
         #print(f"A mate left reversed BND call [p[t")
-    return BND_func_tuple
-    # BND_func_tuple = (CHROM, SV, BND_type, AD, Mate_CHROM, Mate_POS)
-    
+    return BND_func_tuple    
 
 def populate_bigdict(patientid, callerlist, foldername):
     bigdict = {}
