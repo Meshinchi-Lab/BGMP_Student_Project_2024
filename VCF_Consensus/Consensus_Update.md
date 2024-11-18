@@ -1,8 +1,8 @@
 # Consensus Update
 
-[Script](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/d0a516e8edc80ce6c213546a8bd3b27c9d9e1884/VCF_Consensus/llcombo5.py)
+[Script](llcombo6.py)
 
-[Output File ](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/d0a516e8edc80ce6c213546a8bd3b27c9d9e1884/VCF_Consensus/testconsensus_llcombo5.vcf)
+[Output File ](llcombo6_output_nov_18.vcf)
 
 ## Test Consensus File Stats
 **Total calls written**: 7918
