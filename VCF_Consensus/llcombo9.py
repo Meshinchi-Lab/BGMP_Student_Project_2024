@@ -4,7 +4,7 @@ import os
 import re
 import itertools
 
-# ./llcombo6.py -i /projects/bgmp/shared/groups/2024/aml/lenara/trial_files -o llcombo6_output.vcf
+# ./llcombo9.py -i /projects/bgmp/shared/groups/2024/aml/lenara/trial_files -o llcombo9_output.vcf
 
   
 #Functions
