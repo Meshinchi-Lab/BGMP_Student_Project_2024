@@ -19,7 +19,7 @@ aml_counts <- read_tsv("/Users/maurakautz/pAML/counts (1).tsv")
 ```
 
 ```{r, fig.width=10, echo=FALSE, message=FALSE`}
-aml_plot <- ggplot(aml_counts, aes(x=Variant_Type, y=log2(Count), fill=Caller_Type)) +
+aml_plot <- ggplot(aml_counts, aes(x=Variant_Type, y=Count, fill=Caller_Type)) +
   geom_bar(position=position_dodge(), stat="identity") +
   theme_bw() +
   xlab("Structural Variant Type") +
