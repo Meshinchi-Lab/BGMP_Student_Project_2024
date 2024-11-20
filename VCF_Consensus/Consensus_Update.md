@@ -22,20 +22,30 @@
 ## Consensus Counts by Caller - Test Data
 ![alt text](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/f6b72304f270a7deec6828db82d7667026e71475/VCF_Consensus/testdata_consensus_bycaller.png)
 
+## Consensus Counts by Caller - Full Data (Chr1 & Chr2, llcombo8)
+![consensus_counts_chr1 2](https://github.com/user-attachments/assets/705311e6-3b35-4727-bf46-49ec20485aab)
 
-## Consensus Counts by Caller - Full Data (llcombo8 output)
-![consensus_counts](https://github.com/user-attachments/assets/fe4d1c42-007b-4270-98f0-0a32e9ef6e85)
+
+## Consensus Counts by Caller - Full Data (llcombo8)
+![consensus_counts](https://github.com/user-attachments/assets/9fc39958-6167-4b6c-9744-326c2b7eb987)
 
 
 ## Full dataset pre-consensus stats
 <img width="779"
-                                                                                                                                          alt="Screenshot 2024-11-13 at 1 54 52 PM" src="https://github.com/user-attachments/assets/8ef43368-0c27-4055-90d5-86791f8510e7">
+                                                                                                                                    alt="Screenshot 2024-11-13 at 1 54 52 PM" src="https://github.com/user-attachments/assets/8ef43368-0c27-4055-90d5-86791f8510e7">
 
 <img width="780" alt="Screenshot 2024-11-13 at 1 57 38 PM" src="https://github.com/user-attachments/assets/005dd77d-a721-4d37-bc8e-7c95f5976320">
 
+## Full dataset post-consensus stats
+<img width="771" alt="Screenshot 2024-11-20 at 1 38 49 PM" src="https://github.com/user-attachments/assets/74a9a2db-ebe0-4af1-b52a-46b688838f66">
+
+<img width="771" alt="Screenshot 2024-11-20 at 1 40 55 PM" src="https://github.com/user-attachments/assets/08b6f877-a620-49f0-9f4a-ae3f49665ea4">
+
+
 ## Assumptions/Rules of Our Algorithm
 - Exclusively running on chromosomes 1-22
-- If two or more calls from different callers overlap, the one with the highest allelic depth (AD) is written to the output file
+- If two or more calls from different calle
+rs overlap, the one with the highest allelic depth (AD) is written to the output file
 - If the two or more calls from different callers overlap and have the same allelic depth, the first encountered call is written to the output file (“caller agnostic”)
 - **Handling breakends**:
   - Established nomenclature for BND “type” per [VCF 4.2](https://samtools.github.io/hts-specs/VCFv4.2.pdf):
@@ -44,7 +54,7 @@
     - BND_type = 3: N]
     - BND_type = 4: [N
   - Considered a match between callers if:
-
     - BNDs are of the same type and have the same mate chromosome
     - BNDs are of type 2 and 4 and mate position of the type 2 breakend is >= the mate position of the type 4 breakend
+
 
