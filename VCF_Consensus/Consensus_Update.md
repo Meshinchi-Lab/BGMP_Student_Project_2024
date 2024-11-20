@@ -6,7 +6,7 @@
 
 [Consensus Script: Mult. Alleles By AD](llcombo9.py)
 
-[Consensus Script: Mult. Alleles By AD](llcombo9_output.vcf)
+[Consensus Script: Mult. Alleles By AD Output](llcombo9_output.vcf)
 
 ## Test Consensus File Stats (Consensus Script: Mult. Alleles By Length)
 **Total calls written**: 7918
