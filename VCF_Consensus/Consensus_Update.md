@@ -19,7 +19,13 @@
 | Sniffles | 4906 | 2945 | 60.02% |
 
 
+## Consensus Counts by Caller - Test Data
 ![alt text](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/f6b72304f270a7deec6828db82d7667026e71475/VCF_Consensus/testdata_consensus_bycaller.png)
+
+
+## Consensus Counts by Caller - Full Data (llcombo8 output)
+![consensus_counts](https://github.com/user-attachments/assets/fe4d1c42-007b-4270-98f0-0a32e9ef6e85)
+
 
 ## Full dataset pre-consensus stats
 <img width="779"
