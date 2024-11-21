@@ -25,7 +25,7 @@ aggregate_counts <- aml_counts %>%
   ungroup()
 ```
 
-```{r, echo=FALSE, message=FALSE, fig.width=10`}
+```{r, echo=FALSE, message=FALSE, fig.width=10}
 consensus_plot <- ggplot(aggregate_counts, aes(x=SV, y=Total_Counts, fill=Caller)) + #plotting SV counts by caller
   geom_bar(position=position_dodge(), stat="identity") +
   theme_bw() +
@@ -45,10 +45,11 @@ consensus_plot$labels$fill <- "Caller"
 
 consensus_plot
 
-ggsave("consensus_counts.png")```
+ggsave("consensus_counts.png")
+```
 
 
-```{r, echo=FALSE, message=FALSE`}
+```{r, echo=FALSE, message=FALSE}
 # Creating data frame of all structural variants for each chromosome by caller
 aggregate_counts2 <- aml_counts %>% 
   group_by(SV, Caller, Chromosome) %>% 
@@ -81,4 +82,5 @@ chr1_chr2_plot$labels$fill <- "Caller"
 
 chr1_chr2_plot
 
-ggsave("consensus_counts_chr1&2.png")```
+ggsave("consensus_counts_chr1&2.png")
+```
