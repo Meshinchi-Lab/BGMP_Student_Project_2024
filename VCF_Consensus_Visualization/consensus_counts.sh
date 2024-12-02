@@ -2,7 +2,7 @@
 
 #SBATCH --partition=bgmp
 #SBATCH --account=bgmp
-#SBATCH --mem=160G
+#SBATCH --mem=100G
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=lenara@uoregon.edu
 
