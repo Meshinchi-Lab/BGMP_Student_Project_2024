@@ -33,6 +33,12 @@ aggregate_counts <- aml_counts %>%
 #font_import()
 #loadfonts(device="all")
 
+#Fred Hutch Hex Codes:
+#A74AC7 (purple)
+#FCB001 (yellow)
+#00C0D5 (blue)
+#19355C (navy) 
+
 consensus_plot <- ggplot(aggregate_counts, aes(x=SV, y=Total_Counts, fill=Caller)) + #plotting SV counts by caller
   geom_bar(position=position_dodge(), stat="identity") +
   theme_bw() +
