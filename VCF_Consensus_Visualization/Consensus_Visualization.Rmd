@@ -75,8 +75,16 @@ chr1_chr2_plot <- ggplot(filtered, aes(x=SV, y=Total_Counts, fill=Caller)) +
     strip.background = element_rect(fill = "#8bba40", color = "black"), # Fill facet titles with color
     strip.text = element_text(color = "black", face = "bold"),
     axis.title.x = element_text(margin = margin(t = 15)),  # Add space above x-axis title
-    axis.title.y = element_text(margin = margin(r = 15))   # Add space to the right of y-axis title
+    axis.title.y = element_text(margin = margin(r = 15)),   # Add space to the right of y-axis title
+    text = element_text(family = "Verdana")
   )
+
+#Used following steps to change font in console:
+
+#install.packages("extrafont")
+#library(extrafont)
+#font_import()
+#loadfonts(device="all")
 
 chr1_chr2_plot$labels$fill <- "Caller"
 
