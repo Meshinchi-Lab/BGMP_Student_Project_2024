@@ -12,6 +12,7 @@ library(readr)
 library(tidyverse)
 library(knitr)
 library(grDevices)
+library(extrafont)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
