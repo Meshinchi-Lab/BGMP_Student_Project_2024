@@ -26,6 +26,13 @@ aggregate_counts <- aml_counts %>%
 ```
 
 ```{r, echo=FALSE, message=FALSE, fig.width=10}
+#Used following steps to change font in console:
+
+#install.packages("extrafont")
+#library(extrafont)
+#font_import()
+#loadfonts(device="all")
+
 consensus_plot <- ggplot(aggregate_counts, aes(x=SV, y=Total_Counts, fill=Caller)) + #plotting SV counts by caller
   geom_bar(position=position_dodge(), stat="identity") +
   theme_bw() +
@@ -38,8 +45,9 @@ consensus_plot <- ggplot(aggregate_counts, aes(x=SV, y=Total_Counts, fill=Caller
   theme(
     panel.grid = element_blank(), # Removes all grid lines
     axis.title.x = element_text(margin = margin(t = 15)),  # Add space above x-axis title
-    axis.title.y = element_text(margin = margin(r = 15))   # Add space to the right of y-axis title
-    )
+    axis.title.y = element_text(margin = margin(r = 15)),   # Add space to the right of y-axis title
+    text = element_text(family = "Verdana")
+  )
 
 consensus_plot$labels$fill <- "Caller"
 
@@ -79,12 +87,6 @@ chr1_chr2_plot <- ggplot(filtered, aes(x=SV, y=Total_Counts, fill=Caller)) +
     text = element_text(family = "Verdana")
   )
 
-#Used following steps to change font in console:
-
-#install.packages("extrafont")
-#library(extrafont)
-#font_import()
-#loadfonts(device="all")
 
 chr1_chr2_plot$labels$fill <- "Caller"
 
