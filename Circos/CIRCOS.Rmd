@@ -1,0 +1,242 @@
+---
+title: "circlize"
+author: "Lauren Williams"
+date: "2024-12-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(circlize)
+library(bedr)
+library(dplyr)
+library(rlist)
+library(stringr)
+```
+
+
+```{r initializing BED files for each variant, warning=FALSE}
+#vcf_file <- read.vcf("~/Downloads/PAUPXH-03A-01D_consensus.vcf")
+
+vcf_file <- read.vcf("~/Downloads/TARGET-20-PAURDN-03A-01D_consensus.vcf")
+
+vcf_bed <- vcf2bed(vcf_file, other = c("ID", "INFO", "ALT"))
+vcf_bed <- vcf_bed %>% filter(chr!="chrM") %>% mutate(value = 1) 
+vcf_bed <- data.frame(vcf_bed)
+
+bed_INS <- vcf_bed %>% filter(grepl("INS", ID)) %>% distinct(chr, start, .keep_all = TRUE)
+bed_DEL <- vcf_bed %>% filter(grepl("DEL", ID)) %>% distinct(chr, start, .keep_all = TRUE)
+bed_INV <- vcf_bed %>% filter(grepl("INV", ID)) %>% distinct(chr, start, .keep_all = TRUE)
+bed_DUP <- vcf_bed %>% filter(grepl("DUP", ID)) %>% distinct(chr, start, .keep_all = TRUE)
+bed_BND <- vcf_bed %>% filter(grepl("BND", ID)) %>% distinct(chr, start, .keep_all = TRUE) #%>% filter(grepl("\\bchr1\\b|chr3|chr17", chr)) 
+#bed_BND <- rbind(bed_BND, bed_BND[rep(3, 1), ])
+#bed_BND_MATES <- vcf_bed %>% filter(grepl("BND", ID)) %>% distinct(chr, start, .keep_all = TRUE) %>% filter(grepl("\\bchr1\\b|chr7|chr20", chr)) 
+
+#bed_INS is [start - 1, end]
+#bed_DEL is [start - 1, start] -> should be [start - 1, end] 
+#bed_INV is [start -1, start + 4] -> should be [start - 1, end]
+#bed_DUP is [start -1, start + 4] -> should be [start - 1, end]
+#bed_BND ... honestly i have no idea how they are calculated the end of the BNDs
+```
+
+
+```{r initializing canonical fusion ddataframe}
+#canonical fusions
+canon_fusions_df  <- read.delim("~/Downloads/canonical_paml_fusions.tsv", sep="\t")
+
+```
+
+
+```{r initializing bed_BND_MATE}
+mates <- bed_BND$ALT
+mates <- strsplit(mates, ":")
+
+chrom_mate <- sapply(mates, `[[`,1)
+chrom_mate <- str_match(chrom_mate, "chr\\w+")
+
+pos_mate <- sapply(mates, `[[`, 2)
+pos_mate <- str_match(pos_mate, "\\d+")
+pos_mate <- as.numeric(pos_mate)
+
+chr <- c(chrom_mate)
+start <- c(pos_mate)
+end <- c(pos_mate)
+value <- c(1)
+
+bed_BND_MATES <- data.frame(chr, start, end, value)
+
+```
+
+
+```{r marking canonical fusion}
+
+#TARGET-20-PAVBIH-09A-02D_consensus -> MLLT10 gene on chromosome 10 with chromosome X
+#TARGET-20-PAUZRY-09A-02D_consensus -> RUNX1 gene on chromosome 21 with RUNX1T1 gene on chromosome 8
+#TARGET-20-PAUNVN-09A-01D_Tumor_consensus -> ETV6 gene on chromosome 12 with chromosome 4 
+
+#TARGET-20-PAURDN-03A-01D_consensus -> NUP98 gene on chromosome 11 with chromosome 5
+#PAVESI-03A-01D_Tumor_consensus -> NUP98 gene on chromosome 11 with chromosome 5
+#TARGET-20-PAUPIY-03A-01D_consensus -> NUP98 gene on chromosome 11 with chromosome 5
+
+#bed_BND_CANON <- 
+#bed_BND_MATES_CANON <- 
+
+```
+
+
+```{r fixing bed_DEL end values}
+del_end <- data.frame(matrix(nrow=0,ncol=1))
+del_end <- del_end %>% rename(end = matrix.nrow...0..ncol...1.)
+
+info <- bed_DEL$INFO
+info <- strsplit(info, "END=")
+
+NEWEND <- sapply(info, `[[`, 2)
+NEWEND <- str_match(NEWEND, "\\d+")
+NEWEND <- as.numeric(NEWEND)
+
+bed_DEL <- bed_DEL %>% mutate(NEWEND = NEWEND)
+bed_DEL <- bed_DEL %>% rename(OLDend = end)
+bed_DEL <- bed_DEL %>% mutate(OLDend = NULL)
+bed_DEL <- bed_DEL %>% rename(end = NEWEND)
+bed_DEL <- bed_DEL[, c("chr", "start", "end", "ID", "INFO", "value")] 
+
+```
+
+
+```{r fixing bed_INV end values}
+inv_end <- data.frame(matrix(nrow=0,ncol=1))
+inv_end <- inv_end %>% rename(end = matrix.nrow...0..ncol...1.)
+
+info <- bed_INV$INFO
+info <- strsplit(info, "END=")
+
+NEWEND <- sapply(info, `[[`, 2)
+NEWEND <- str_match(NEWEND, "\\d+")
+NEWEND <- as.numeric(NEWEND)
+
+bed_INV <- bed_INV %>% mutate(NEWEND = NEWEND)
+bed_INV <- bed_INV %>% rename(OLDend = end)
+bed_INV <- bed_INV %>% mutate(OLDend = NULL)
+bed_INV <- bed_INV %>% rename(end = NEWEND)
+bed_INV <- bed_INV[, c("chr", "start", "end", "ID", "INFO", "value")] 
+
+```
+
+
+```{r fixing bed_DUP end values}
+dup_end <- data.frame(matrix(nrow=0,ncol=1))
+dup_end <- dup_end %>% rename(end = matrix.nrow...0..ncol...1.)
+
+info <- bed_DUP$INFO
+info <- strsplit(info, "END=")
+
+NEWEND <- sapply(info, `[[`, 2)
+NEWEND <- str_match(NEWEND, "\\d+")
+NEWEND <- as.numeric(NEWEND)
+
+bed_DUP <- bed_DUP %>% mutate(NEWEND = NEWEND)
+bed_DUP <- bed_DUP %>% rename(OLDend = end)
+bed_DUP <- bed_DUP %>% mutate(OLDend = NULL)
+bed_DUP <- bed_DUP %>% rename(end = NEWEND)
+bed_DUP <- bed_DUP[, c("chr", "start", "end", "ID", "INFO", "value")] 
+
+```
+
+
+```{r circos with all chromosomes}
+
+# INITIALIZE WITH IDEOGRAM (all chromosomes)
+circos.par(track.height = 0.1)
+circos.initializeWithIdeogram(species = "hg38")
+
+
+# ADD PATIENT NAME
+text(1, 1, "TARGET-20-PAURDN-03A-01D", cex = 1)
+
+# OLD INSERTION & DELETION TRACKS
+#circos.genomicTrack(bed_INS, ylim = c(0, 1), panel.fun = function(region, value, ...) {circos.genomicLines(region, value, type = "h", col = "purple")})
+#circos.genomicTrack(bed_DEL, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
+
+# INSERTION TRACK
+circos.trackHist(bed_INS$chr, x = bed_INS$start, bin.size = 1000000, col = "purple", border = "purple")
+
+# DELETION TRACK
+circos.trackHist(bed_DEL$chr, x = bed_DEL$start, bin.size = 1000000, col = "green3", border = "green3")
+
+# INVERSION TRACK
+circos.genomicTrack(bed_INV, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
+
+# DUPLICATION TRACK
+circos.genomicLink(bed_DUP, bed_DUP, col = "green3", border = "green3")
+
+# TRANSLOCATION TRACK
+circos.genomicLink(bed_BND, bed_BND_MATES, col = "red2", border = "red2")
+
+# CANONICAL TRANSLOCATIONS
+#circos.genomicLink(bed_BND_CANON, bed_BND_MATES_CANON, col = "black", border = "black")
+
+```
+
+
+```{r circos with subest of chromosomes}
+
+# INITIALIZE WITH SUBSET OF CHROMOSOMES (chr5 & chr11)
+bed_INS_5_11 <- bed_INS %>% filter(grepl("chr5|chr11", chr))
+bed_DEL_5_11 <- bed_DEL %>% filter(grepl("chr5|chr11", chr))
+bed_INV_5_11 <- bed_INV %>% filter(grepl("chr5|chr11", chr))
+bed_DUP_5_11 <- bed_DUP %>% filter(grepl("chr5|chr11", chr))
+bed_BND_5_11 <- bed_BND %>% filter(grepl("chr5|chr11", chr))
+bed_BND_MATES_5_11 <- bed_BND_MATES %>% filter(grepl("chr5|chr11", chr))
+#par(cex = 1.2, mar = c(0, 0, 0, 0), cex.axis = 4)
+circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr5","chr11"))
+
+# ADD PATIENT NAME
+text(1, 1, "TARGET-20-PAURDN-03A-01D", cex = 1)
+
+# INSERTION TRACK
+circos.trackHist(bed_INS_5_11$chr, x = bed_INS_5_11$start, bin.size = 1000000, col = "purple", border = "purple")
+
+# DELETION TRACK
+circos.trackHist(bed_DEL_5_11$chr, x = bed_DEL_5_11$start, bin.size = 1000000, col = "green3", border = "green3")
+
+# INVERSION TRACK
+circos.genomicTrack(bed_INV_5_11, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
+
+# DUPLICATION TRACK
+circos.genomicLink(bed_DUP_5_11, bed_DUP_5_11, col = "green3", border = "green3")
+
+# TRANSLOCATION TRACK
+circos.genomicLink(bed_BND_5_11, bed_BND_MATES_5_11, col = "red2", border = "red2")
+```
+
+
+```{r circos with one chromosome}
+
+# INITIALIZE WITH ONE CHROMOSOME (chr17)
+bed_INS_17 <- bed_INS %>% filter(grepl("chr17", chr))
+bed_DEL_17 <- bed_DEL %>% filter(grepl("chr17", chr))
+bed_INV_17 <- bed_INV %>% filter(grepl("chr17", chr))
+bed_DUP_17 <- bed_DUP %>% filter(grepl("chr17", chr))
+bed_BND_17 <- bed_BND %>% filter(grepl("chr17", chr))
+bed_BND_MATES_17 <- bed_BND_MATES %>% filter(grepl("chr17", chr))
+circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr17"))
+
+# ADD PATIENT NAME
+text(1, 1, "TARGET-20-PAURDN-03A-01D", cex = 1)
+
+# INSERTION TRACK
+circos.trackHist(bed_INS_17$chr, x = bed_INS_17$start, bin.size = 1000000, col = "purple", border = "purple")
+
+# DELETION TRACK
+circos.trackHist(bed_DEL_17$chr, x = bed_DEL_17$start, bin.size = 1000000, col = "green3", border = "green3")
+
+# INVERSION TRACK
+circos.genomicTrack(bed_INV_17, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
+
+# DUPLICATION TRACK
+circos.genomicLink(bed_DUP_17, bed_DUP_17, col = "green3", border = "green3")
+
+# TRANSLOCATION TRACK
+circos.genomicLink(bed_BND_17, bed_BND_MATES_17, col = "red2", border = "red2")
+```
