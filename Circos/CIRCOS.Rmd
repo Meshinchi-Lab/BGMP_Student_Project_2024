@@ -199,7 +199,7 @@ circos.initializeWithIdeogram(species = "hg38")
 
 
 # ADD PATIENT NAME
-text(1, 1, "TARGET-20-PAURDN-03A-01D", cex = 1)
+text(1, 1, patient_name, cex = 1)
 
 # OLD INSERTION & DELETION TRACKS
 #circos.genomicTrack(bed_INS, ylim = c(0, 1), panel.fun = function(region, value, ...) {circos.genomicLines(region, value, type = "h", col = "purple")})
@@ -240,7 +240,7 @@ bed_BND_MATES_5_11 <- bed_BND_MATES %>% filter(grepl("chr5|chr11", chr))
 circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr5","chr11"))
 
 # ADD PATIENT NAME
-text(1, 1, "TARGET-20-PAURDN-03A-01D", cex = 1)
+text(1, 1, patient_name, cex = 1)
 
 # INSERTION TRACK
 circos.trackHist(bed_INS_5_11$chr, x = bed_INS_5_11$start, bin.size = 1000000, col = "purple", border = "purple")
@@ -276,7 +276,7 @@ bed_BND_MATES_17 <- bed_BND_MATES %>% filter(grepl("chr17", chr))
 circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr17"))
 
 # ADD PATIENT NAME
-text(1, 1, "TARGET-20-PAURDN-03A-01D", cex = 1)
+text(1, 1, patient_name, cex = 1)
 
 # INSERTION TRACK
 circos.trackHist(bed_INS_17$chr, x = bed_INS_17$start, bin.size = 1000000, col = "purple", border = "purple")
