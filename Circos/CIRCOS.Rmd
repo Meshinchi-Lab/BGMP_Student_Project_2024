@@ -46,14 +46,6 @@ bed_BND <- vcf_bed %>% filter(grepl("BND", ID)) %>% distinct(chr, start, .keep_a
 #bed_BND ... honestly i have no idea how they are calculated the end of the BNDs
 ```
 
-
-```{r initializing canonical fusion dataframe}
-#canonical fusions
-canon_fusions_df  <- read.delim("~/Downloads/canonical_paml_fusions.tsv", sep="\t")
-
-```
-
-
 ```{r initializing bed_BND_MATE}
 mates <- bed_BND$ALT
 mates <- strsplit(mates, ":")
@@ -213,12 +205,12 @@ bed_DUP <- bed_DUP[, c("chr", "start", "end", "ID", "INFO", "value")]
 ```{r circos with all chromosomes}
 
 # INITIALIZE WITH IDEOGRAM (all chromosomes)
-circos.par(track.height = 0.08)
+circos.clear()
+circos.par(track.height = 0.08, start.degree = 90)
 circos.initializeWithIdeogram(species = "hg38")
 
-
 # ADD PATIENT NAME
-text(1, 1, patient_name, cex = 1)
+#text(1, 1, patient_name, cex = 1)
 
 # OLD INSERTION & DELETION TRACKS
 #circos.genomicTrack(bed_INS, ylim = c(0, 1), panel.fun = function(region, value, ...) {circos.genomicLines(region, value, type = "h", col = "purple")})
@@ -247,18 +239,22 @@ if (patient_name == "TARGET-20-PAVBIH-09A-02D" || patient_name == "TARGET-20-PAU
 #circos.genomicLabels(bed_BND_CANON, labels.column = 4, side = "inside", cex = 0.5, line_col = "darkgrey", line_lty = "solid", connection_height = mm_h(10))
 #circos.genomicLabels(bed_BND_CANON, labels.column = 4, side = "outside", cex = 0.5, col = "black", line_lty = "blank")
 
+#file_name <- paste0("circos_", patient_name, ".png")
+#dev.copy(jpeg,file_name, width=8, height=8, units="in", res=500)
+
+
 ```
 
 
 ```{r circos with subest of chromosomes}
 
 # INITIALIZE WITH SUBSET OF CHROMOSOMES (chr5 & chr11)
-bed_INS_5_11 <- bed_INS %>% filter(grepl("chr5|chr11", chr))
-bed_DEL_5_11 <- bed_DEL %>% filter(grepl("chr5|chr11", chr))
-bed_INV_5_11 <- bed_INV %>% filter(grepl("chr5|chr11", chr))
-bed_DUP_5_11 <- bed_DUP %>% filter(grepl("chr5|chr11", chr))
-bed_BND_5_11 <- bed_BND %>% filter(grepl("chr5|chr11", chr))
-bed_BND_MATES_5_11 <- bed_BND_MATES %>% filter(grepl("chr5|chr11", chr))
+bed_INS_two <- bed_INS %>% filter(grepl(paste("chr5$|chr11$"), chr))
+bed_DEL_two <- bed_DEL %>% filter(grepl(paste("chr5$|chr11$"), chr))
+bed_INV_two <- bed_INV %>% filter(grepl(paste("chr5$|chr11$"), chr))
+bed_DUP_two <- bed_DUP %>% filter(grepl(paste("chr5$|chr11$"), chr))
+bed_BND_two <- bed_BND %>% filter(grepl(paste("chr5$|chr11$"), chr))
+bed_BND_MATES_two <- bed_BND_MATES %>% filter(grepl(paste("chr5$|chr11$"), chr))
 #par(cex = 1.2, mar = c(0, 0, 0, 0), cex.axis = 4)
 circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr5","chr11"))
 
@@ -266,19 +262,21 @@ circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr5","chr
 text(1, 1, patient_name, cex = 1)
 
 # INSERTION TRACK
-circos.trackHist(bed_INS_5_11$chr, x = bed_INS_5_11$start, bin.size = 1000000, col = "purple", border = "purple")
+circos.trackHist(bed_INS_two$chr, x = bed_INS_two$start, bin.size = 1000000, col = "purple", border = "purple")
 
 # DELETION TRACK
-circos.trackHist(bed_DEL_5_11$chr, x = bed_DEL_5_11$start, bin.size = 1000000, col = "green3", border = "green3")
+circos.trackHist(bed_DEL_two$chr, x = bed_DEL_two$start, bin.size = 1000000, col = "green3", border = "green3")
 
 # INVERSION TRACK
-circos.genomicTrack(bed_INV_5_11, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
+circos.genomicTrack(bed_INV_two, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
 
 # DUPLICATION TRACK
-circos.genomicLink(bed_DUP_5_11, bed_DUP_5_11, col = "green3", border = "green3")
+circos.genomicLink(bed_DUP_two, bed_DUP_two, col = "green3", border = "green3")
 
 # TRANSLOCATION TRACK
-circos.genomicLink(bed_BND_5_11, bed_BND_MATES_5_11, col = "red2", border = "red2")
+if(nrow(bed_BND_two) >= 1){
+  circos.genomicLink(bed_BND_two, bed_BND_MATES_two, col = "red2", border = "red2")
+}
 
 # CANONICAL TRANSLOCATIONS
 if (patient_name == "TARGET-20-PAVBIH-09A-02D" || patient_name == "TARGET-20-PAUZRY-09A-02D" || patient_name == "TARGET-20-PAUNVN-09A-01D" || patient_name == "TARGET-20-PAURDN-03A-01D" || patient_name == "PAVESI-03A-01D_Tumor" || patient_name == "TARGET-20-PAUPIY-03A-01D"){
@@ -290,31 +288,33 @@ if (patient_name == "TARGET-20-PAVBIH-09A-02D" || patient_name == "TARGET-20-PAU
 ```{r circos with one chromosome}
 
 # INITIALIZE WITH ONE CHROMOSOME (chr17)
-bed_INS_17 <- bed_INS %>% filter(grepl("chr17", chr))
-bed_DEL_17 <- bed_DEL %>% filter(grepl("chr17", chr))
-bed_INV_17 <- bed_INV %>% filter(grepl("chr17", chr))
-bed_DUP_17 <- bed_DUP %>% filter(grepl("chr17", chr))
-bed_BND_17 <- bed_BND %>% filter(grepl("chr17", chr))
-bed_BND_MATES_17 <- bed_BND_MATES %>% filter(grepl("chr17", chr))
-circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr17"))
+bed_INS_one <- bed_INS %>% filter(grepl("chr1$", chr))
+bed_DEL_one <- bed_DEL %>% filter(grepl("chr1$", chr))
+bed_INV_one <- bed_INV %>% filter(grepl("chr1$", chr))
+bed_DUP_one <- bed_DUP %>% filter(grepl("chr1$", chr))
+bed_BND_one <- bed_BND %>% filter(grepl("chr1$", chr))
+bed_BND_MATES_one <- bed_BND_MATES %>% filter(grepl("chr1$", chr))
+circos.initializeWithIdeogram(species = "hg38", chromosome.index = c("chr1"))
 
 # ADD PATIENT NAME
 text(1, 1, patient_name, cex = 1)
 
 # INSERTION TRACK
-circos.trackHist(bed_INS_17$chr, x = bed_INS_17$start, bin.size = 1000000, col = "purple", border = "purple")
+circos.trackHist(bed_INS_one$chr, x = bed_INS_one$start, bin.size = 1000000, col = "purple", border = "purple")
 
 # DELETION TRACK
-circos.trackHist(bed_DEL_17$chr, x = bed_DEL_17$start, bin.size = 1000000, col = "green3", border = "green3")
+circos.trackHist(bed_DEL_one$chr, x = bed_DEL_one$start, bin.size = 1000000, col = "green3", border = "green3")
 
 # INVERSION TRACK
-circos.genomicTrack(bed_INV_17, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
+circos.genomicTrack(bed_INV_one, ylim = c(0,1), panel.fun = function(region, value, ...) {circos.genomicRect(region, value, col = "green3", border = "green3")})
 
 # DUPLICATION TRACK
-circos.genomicLink(bed_DUP_17, bed_DUP_17, col = "green3", border = "green3")
+circos.genomicLink(bed_DUP_one, bed_DUP_one, col = "green3", border = "green3")
 
 # TRANSLOCATION TRACK
-circos.genomicLink(bed_BND_17, bed_BND_MATES_17, col = "red2", border = "red2")
+if(nrow(bed_BND_one) >= 1){
+  circos.genomicLink(bed_BND_one, bed_BND_MATES_one, col = "red2", border = "red2")
+}
 
 # CANONICAL TRANSLOCATIONS
 if (patient_name == "TARGET-20-PAVBIH-09A-02D" || patient_name == "TARGET-20-PAUZRY-09A-02D" || patient_name == "TARGET-20-PAUNVN-09A-01D" || patient_name == "TARGET-20-PAURDN-03A-01D" || patient_name == "PAVESI-03A-01D_Tumor" || patient_name == "TARGET-20-PAUPIY-03A-01D"){
