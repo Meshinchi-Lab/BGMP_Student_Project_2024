@@ -55,7 +55,7 @@ for patient in patient_list:
                                 counter_dict[(patient, caller, chromosome, sv)] = 1 
 
 #write to output file for ALL patients 
-with open("counts.tsv", "w") as counts: 
+with open("llcombo_10_counts.tsv", "w") as counts: 
     counts.write(f"PatientID\tCaller\tChromosome\tSV\tCount\n")
     for key in counter_dict: 
         counts.write(f'{key[0]}\t{key[1]}\t{key[2]}\t{key[3]}\t{counter_dict[key]}\n')
