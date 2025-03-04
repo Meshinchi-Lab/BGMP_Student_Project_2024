@@ -28,7 +28,7 @@ patient_list = []
 
 #pull patient IDs & caller names from file names: 
 for file in dir_list:
-    x = re.split("\\.", file)
+    x = re.split("\\.vcf", file)
     if x[0] not in patient_list: 
         patient_list.append(x[0]) 
 
@@ -58,7 +58,10 @@ for patient in patient_list:
             if line_as_list == ['']:
                 break
 
-            if line_as_list[2] == "pbsv.BND" or line_as_list[2] == "sniffles.BND":
+            if line_as_list[0].startswith("##"):
+                continue
+
+            if line_as_list[2] == "pbsv.BND" or line_as_list[2] == "sniffles.BND" or line_as_list[2].startswith("Sniffles2.BND") or line_as_list[2].startswith("pbsv.BND"):
                 bnd_mate_pos = re.search(r"(?<=:)\d+", line_as_list[4])
                 bnd_mate_chrom = re.search(r"\w+(?=:)", line_as_list[4])
                 temp = (line_as_list[0], line_as_list[1], bnd_mate_chrom.group(), bnd_mate_pos.group())
@@ -70,7 +73,6 @@ for patient in patient_list:
                         if fusion[1] == "X":
                             print("gene 1 matches", patient, temp, fusion[0], fusion[1])
                         else: 
-                            print("gene 1 matches, checking gene 2")
                             matched_gene = fusion[1]
                             #check matched gene
                             for fusion2 in potential_fusions_list:
@@ -81,7 +83,6 @@ for patient in patient_list:
                         if fusion[1] == "X":
                             print("gene 1 matches", patient, temp, fusion[0], fusion[1])
                         else: 
-                            print("gene 1 matches, checking gene 2")
                             matched_gene = fusion[1]
                             #check matched gene
                             for fusion2 in potential_fusions_list:
