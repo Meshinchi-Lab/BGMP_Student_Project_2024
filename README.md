@@ -29,3 +29,7 @@ This tool generates a set of high-confidence structural variants from the output
 ***-min_overlap***: Minimum overlap of bases required for two variants from different callers to be considered concordant. Defaults to 1 base unless otherwise specified.
 
 *By increasing the number of callers that must identify a structural variant, the output consensus files will contain less, but higher quality data. Similarly, increasing the number of overlapping bases required will restrict the number of consensus variants found. It is recommended to begin with few restrictions, and increase as needed.*
+
+## Consensus Tool Workflow
+
+![alt text](LLCOMBO_WORKFLOW.png)

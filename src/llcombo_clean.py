@@ -79,14 +79,14 @@ def BND_parser(line_as_list, infodictionary):
     return BND_func_tuple
     # BND_func_tuple = (CHROM, SV, BND_type, AD, Mate_CHROM, Mate_POS)
     
-def populate_bigdict(patientid, callerlist, foldername):
+def populate_bigdictionary(patientid, callerlist, foldername):
     '''Given a patient ID, a list of callers, and the name of the folder containing the VCF files, 
         returns a dictionary where keys = caller and
         values = {(chrom, svtype, (start_pos, start_pos+svlen), allelic_depth): line}
         for each patient'''
-    bigdict = {}
+    bigdictionary = {}
     for caller in callerlist:
-        bigdict[caller] = {}
+        bigdictionary[caller] = {}
 
         with open(f"{foldername}/{patientid}.{caller}.vcf", "r") as file:
 
@@ -115,13 +115,13 @@ def populate_bigdict(patientid, callerlist, foldername):
                     #get chromosome
                     chrom = line_as_list[0]
 
-                    #diversion for breakends
+                    #get information for breakend lines
                     if svtype == "BND": 
                         mchr = re.search(r"\w+(?=:)", line_as_list[4])
                         if mchr.group() in chrom_list and line_as_list[0] in chrom_list:
-                        #this is where abraham's breakend algorithm will go :)
+                        #parse breakend lines
                             BND_tuple = BND_parser(line_as_list, infodictionary)
-                            bigdict[caller][BND_tuple] = line
+                            bigdictionary[caller][BND_tuple] = line
 
                     else:
                         #get SV length
@@ -149,8 +149,8 @@ def populate_bigdict(patientid, callerlist, foldername):
                             allelic_depth = int(allelic_depth.split(",")[1])
                         
                         #append to dictionary
-                        bigdict[caller][(chrom, svtype, (start_pos, start_pos+svlen), allelic_depth)] = line
-    return bigdict
+                        bigdictionary[caller][(chrom, svtype, (start_pos, start_pos+svlen), allelic_depth)] = line
+    return bigdictionary
 
 def filter_duplicates(dict_of_overlaps):
     '''Takes a dictionary where keys = calls from one caller and values = overlapping calls from other callers and 
@@ -220,10 +220,10 @@ def get_args():
     parser.add_argument("-input", help="Location of folder containing input files", required=True, type=str)
     parser.add_argument("-output", help="Location of folder to place output files", required=True, type=str)
     parser.add_argument("-numcallers", help="Number of callers whose output files are being compared", required=True, type=int)
-    parser.add_argument("-min_indels", help="Number of callers that must identify an indel for it to be included in consensus output. MUST BE GREATER THAN 1", required=True, type=int)
-    parser.add_argument("-min_bnds", help="Number of callers that must identify a breakend for it to be included in consensus output. MUST BE GREATER THAN 1", required=True, type=int)
-    parser.add_argument("-min_inv_dup", help="Number of callers that must identify an inversion or duplication for it to be included in consensus output. MUST BE GREATER THAN 1", required=True, type=int)
-    parser.add_argument("-min_overlap", help="Minimum overlap of bases required for two variants from different callers to be considered concordant.", default=1, required=True,type=int)
+    parser.add_argument("-min_indels", help="Number of callers that must identify an indel for it to be included in consensus output.", required=True, type=int)
+    parser.add_argument("-min_bnds", help="Number of callers that must identify a breakend for it to be included in consensus output.", required=True, type=int)
+    parser.add_argument("-min_inv_dup", help="Number of callers that must identify an inversion or duplication for it to be included in consensus output.", required=True, type=int)
+    parser.add_argument("-min_overlap", help="Minimum overlap of bases required for two calls from different callers to be considered concordant.", default=1, required=True,type=int)
     return parser.parse_args() 
 
 args = get_args()
@@ -277,7 +277,7 @@ for patient in patient_list:
         
         #populate dictionary where keys = caller, 
         #values = {(chrom, svtype, (start_pos, start_pos+svlen), allelic_depth): line}
-        dictionary = populate_bigdict(patient, caller_list, input)
+        dictionary = populate_bigdictionary(patient, caller_list, input)
         # ---------------------------------FILTERING-------------------------------- #
 
         #limit search space to one structural variant/chromosome combination
@@ -321,7 +321,7 @@ for patient in patient_list:
                         #if structural variant IS a breakend
                         elif sv == "BND":
                             if entry[0][4] == other[0][4]:
-                                #LOOK AT THIS...
+                                #checking for breakend types
                                 if entry[0][2] == other[0][2]:
                                     overlapdict[entry].append(other)
                                 elif (entry[0][2] == 2 and other[0][2] == 4) or (entry[0][2] == 3 and other[0][2] == 1):
