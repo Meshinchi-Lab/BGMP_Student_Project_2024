@@ -1,22 +1,23 @@
 # Consensus Update
 
-[Consensus Script: Mult. Alleles By Length](llcombo6.py)
+[Consensus Script: Cleaned](../src/llcombo_clean.py)
 
-[Consensus Script: Mult. Alleles By Length Test File Output](llcombo6_output_nov_18.vcf)
+## Consensus stats (will be updated)
+**Total calls written**: -
 
-[Consensus Script: Mult. Alleles By AD](llcombo9.py)
-
-[Consensus Script: Mult. Alleles By AD Test File Output](llcombo9_output.vcf)
-
-## Test Consensus File Stats (Consensus Script: Mult. Alleles By Length)
-**Total calls written**: 7918
-
-
+### Test
 | Caller | Total Counts in Original VCF File | Total counts in Consensus | % Retained |
 | --- | --- | --- | --- |
 | LRSV | 4416 | 2843 | 64.39% |
 | PBSV | 8435 | 2130 | 25.25% |
 | Sniffles | 4906 | 2945 | 60.02% |
+
+### Full
+| Caller | Total Counts in Original VCF File | Total counts in Consensus | % Retained |
+| --- | --- | --- | --- |
+| LRSV | - | - | - |
+| PBSV | - | - | - |
+| Sniffles | - | - | - |
 
 
 ## Consensus Counts by Caller - Test Data
