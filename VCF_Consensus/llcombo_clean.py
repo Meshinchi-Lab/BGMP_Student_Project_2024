@@ -1,7 +1,11 @@
 #!/usr/bin/env python
-
-# Authors: Lena Allen, Lauren Williams, Maura Kautz, Abraham Solomon
-# Email: lenarallen19@gmail.com, laurenrwilliams.12@gmail.com, maura.kautz@outlook.com
+#=======================================================================#
+# Authors:                                                              #
+#   - Lena Allen, UO BGMP Student (lenarallen19@gmail.com)              #
+#   - Lauren Williams, UO BGMP Student (laurenrwilliams.12@gmail.com)   #
+#   - Maura Kautz, UO BGMP Student (maura.kautz@outlook.com)            #
+#   - Abraham Solomon, UO BGMP Student                                  #
+#=======================================================================#
 
 import argparse
 import os
