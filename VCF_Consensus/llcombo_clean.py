@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+# Authors: Lena Allen, Lauren Williams, Maura Kautz, Abraham Solomon
+# Email: lenarallen19@gmail.com, laurenrwilliams.12@gmail.com, maura.kautz@outlook.com
+
 import argparse
 import os
 import re
