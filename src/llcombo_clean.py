@@ -4,7 +4,7 @@
 #   - Lena Allen, UO BGMP Student (lenarallen19@gmail.com)              #
 #   - Lauren Williams, UO BGMP Student (laurenrwilliams.12@gmail.com)   #
 #   - Maura Kautz, UO BGMP Student (maura.kautz@outlook.com)            #
-#   - Abraham Solomon, UO BGMP Student                                  #
+#   - Abraham Solomon, UO BGMP Student (asolomonpdx@gmail.com)          #
 #=======================================================================#
 
 import argparse
