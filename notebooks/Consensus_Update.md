@@ -1,6 +1,6 @@
 # Consensus Update
 
-[Consensus Script: Cleaned](../src/llcombo_clean.py)
+[Consensus Script: Cleaned](../vcf-consensus/llcombo_clean.py)
 
 ## Consensus stats (will be updated)
 **Total calls written**: -
