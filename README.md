@@ -34,4 +34,4 @@ This tool generates a set of high-confidence structural variants from the output
 
 ## Consensus Tool Workflow
 
-![alt text](LLCOMBO_WORKFLOW.png)
+![alt text](LLCOMBO_WORKFLOW2.png)
