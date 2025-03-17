@@ -37,6 +37,7 @@ aggregate_counts <- aggregate_counts %>% arrange(desc(Total_Counts))
 
 aggregate_counts$Caller <- factor(aggregate_counts$Caller, levels = c("Sniffles", "LongReadSV", "PBSV"))
 ```
+
 ```{r, echo=FALSE, message=FALSE, fig.width=10`}
 consensus_plot <- ggplot(aggregate_counts, 
                          aes(x=reorder(SV, -Total_Counts),y=Total_Counts, fill=Caller)) + #plotting SV counts by caller
