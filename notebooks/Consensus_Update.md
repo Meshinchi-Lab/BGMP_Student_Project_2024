@@ -8,16 +8,16 @@
 ### Test
 | Caller | Total Counts in Original VCF File | Total counts in Consensus | % Retained |
 | --- | --- | --- | --- |
-| LRSV | 4416 | 2843 | 64.39% |
+| LongreadSV | 4416 | 2843 | 64.39% |
 | PBSV | 8435 | 2130 | 25.25% |
-| Sniffles | 4906 | 2945 | 60.02% |
+| Sniffles2 | 4906 | 2945 | 60.02% |
 
 ### Full
 | Caller | Total Counts in Original VCF File | Total counts in Consensus | % Retained |
 | --- | --- | --- | --- |
-| LRSV | - | - | - |
+| LongreadSV | - | - | - |
 | PBSV | - | - | - |
-| Sniffles | - | - | - |
+| Sniffles2 | - | - | - |
 
 
 ## Consensus Counts by Caller - Test Data
