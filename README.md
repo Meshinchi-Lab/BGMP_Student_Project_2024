@@ -1,5 +1,7 @@
 # BGMP Student Project 2024
 
+Lena Allen, Lauren Williams, Maura Kautz, Abraham Solomon
+
 ## VCF Consensus Tool
 
 ### Overview
