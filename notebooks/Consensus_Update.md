@@ -34,8 +34,7 @@
 
 ## Assumptions/Rules of Our Algorithm
 - Exclusively running on chromosomes 1-22
-- If two or more calls from different calle
-rs overlap, the one with the highest allelic depth (AD) is written to the output file
+- If two or more calls from different callers overlap, the one with the highest allelic depth (AD) is written to the output file
 - If the two or more calls from different callers overlap and have the same allelic depth, the first encountered call is written to the output file (“caller agnostic”)
 - **Handling breakends**:
   - Established nomenclature for BND “type” per [VCF 4.2](https://samtools.github.io/hts-specs/VCFv4.2.pdf):
