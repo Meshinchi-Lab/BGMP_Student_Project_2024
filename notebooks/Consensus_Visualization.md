@@ -12,7 +12,9 @@
 | Sniffles2 | 4906 | 2945 | 60.02% |
 
 ### Consensus Counts by Caller
-![alt text](../plots/testdata_consensus_bycaller.png)
+
+![alt text](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/main/notebooks/plots/testdata_consensus_bycaller.png)
+
 
 ## Full Consensus Data
 
@@ -26,5 +28,10 @@
 
 ### Consensus Counts by Caller
 
+![alt text](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/main/notebooks/plots/consensus_counts.png)
+
+
+
+![alt text](https://github.com/Meshinchi-Lab/BGMP_Student_Project_2024/blob/main/notebooks/plots/small_consensus_counts.png)
 
 
