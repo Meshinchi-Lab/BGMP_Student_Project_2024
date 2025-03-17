@@ -1,7 +1,7 @@
 ---
-title: "Counts Visuals"
+title: "Consensus Visualization"
 author: "Maura Kautz"
-date: "2024-10-19"
+date: "2024-11-20"
 output: html_document
 ---
 
@@ -12,29 +12,89 @@ library(readr)
 library(tidyverse)
 library(knitr)
 library(grDevices)
+library(extrafont)
+library(scales)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
-aml_counts <- read_tsv("/Users/maurakautz/pAML/counts (1).tsv")
-```
+aml_counts <- read_tsv("/Users/maurakautz/Downloads/ll_combo_10_counts.txt")
 
-```{r, fig.width=10, echo=FALSE, message=FALSE`}
-aml_plot <- ggplot(aml_counts, aes(x=Variant_Type, y=Count, fill=Caller_Type)) +
+# Creating a data frame of sum of all counts for each structural variant by caller
+
+aggregate_counts <- aml_counts %>% 
+  group_by(SV, Caller) %>% 
+  summarize(Total_Counts = sum(Count)) %>% 
+  ungroup()
+
+#aggregate_counts[1,"SV"] <- "TRA"
+#aggregate_counts[2, "SV"] <- "TRA"
+
+aggregate_counts[aggregate_counts == "pbsv"] <- "PBSV"
+aggregate_counts[aggregate_counts == "sniffles"] <- "Sniffles"
+aggregate_counts[aggregate_counts == "longreadsv"] <- "LongReadSV"
+
+aggregate_counts <- aggregate_counts %>% arrange(desc(Total_Counts))
+
+aggregate_counts$Caller <- factor(aggregate_counts$Caller, levels = c("Sniffles", "LongReadSV", "PBSV"))
+```
+```{r, echo=FALSE, message=FALSE, fig.width=10`}
+consensus_plot <- ggplot(aggregate_counts, 
+                         aes(x=reorder(SV, -Total_Counts),y=Total_Counts, fill=Caller)) + #plotting SV counts by caller
   geom_bar(position=position_dodge(), stat="identity") +
   theme_bw() +
   xlab("Structural Variant Type") +
   ylab("Count") +
-  facet_wrap(~Chromosome) +
-  ggtitle("Frequency of Structural Variants by Caller Across Chromosomes - Test Data") +
-  scale_fill_manual(values = c("#047031",
-                               "#8bba40",
-                               "#fee11d"))
-aml_plot$labels$fill <- "Caller"
+  #ggtitle("Frequency of Structural Variants by Caller: Full Consensus Data") +
+  scale_fill_manual(values = c("#ffb404",
+                               "#00c0d5",
+                               "#a84bc3"))+
+  theme(
+    panel.grid = element_blank(), # Removes all grid lines
+    axis.title.x = element_text(margin = margin(t = 15)),  # Add space above x-axis title
+    axis.title.y = element_text(margin = margin(r = 15)),   # Add space to the right of y-axis title
+    text = element_text(family = "Verdana"),
+    axis.text.x = element_text(face="bold"),
+    axis.text.y = element_text(face="bold"),
+  ) +
+  scale_y_continuous(labels = comma)
 
-aml_plot
+consensus_plot$labels$fill <- "Caller"
 
-ggsave("test_file_visual.png")
-  
-  
+consensus_plot
+
+ggsave("consensus_counts.png")
+```
+
+```{r, echo=FALSE}
+aggregate_counts$Caller <- factor(aggregate_counts$Caller, levels = c("PBSV","Sniffles"))
+small_counts <- aggregate_counts[7:12, ]
+```
+
+
+```{r, echo=FALSE, message=FALSE}
+consensus_plot <- ggplot(small_counts, 
+                         aes(x=reorder(SV, -Total_Counts),y=Total_Counts, fill=Caller)) + #plotting SV counts by caller
+  geom_bar(position=position_dodge(), stat="identity", width=0.6) +
+  theme_bw() +
+  xlab("Structural Variant Type") +
+  ylab("Count") +
+  #ggtitle("Frequency of Structural Variants by Caller: Full Consensus Data") +
+  scale_fill_manual(values = c("#a84bc3",
+                               "#ffb404"))+
+  theme(
+    panel.grid = element_blank(), # Removes all grid lines
+    axis.title.x = element_text(margin = margin(t = 15)),  # Add space above x-axis title
+    axis.title.y = element_text(margin = margin(r = 15)),   # Add space to the right of y-axis title
+    text = element_text(family = "Verdana"),
+    aspect.ratio = 1.25/1,
+    axis.text.x = element_text(face="bold"),
+    axis.text.y = element_text(face="bold"),
+  )
+
+consensus_plot$labels$fill <- "Caller"
+
+consensus_plot
+
+ggsave("small_consensus_counts.png")
 ```
 
