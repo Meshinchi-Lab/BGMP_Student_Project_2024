@@ -2,7 +2,7 @@
 
 ## 🔹 Project Structure
 
-- [canonical-fusions](./canonical-fusions) - Stores fusion-related data, scripts, or results.
+- [canonical-fusions](./canonical-fusions) - Stores list of canonical pAML fusions, canonical fusions we found, and scripts.
 - [circos](./circos) - Contains Circos plot generation script.
 - [data](./data) - Holds unit test datasets and supporting files used for analysis.
 - [notebooks](./notebooks) - Notebooks for exploratory data analysis and documentation.
